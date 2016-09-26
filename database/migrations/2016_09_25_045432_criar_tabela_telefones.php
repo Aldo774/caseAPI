@@ -12,13 +12,13 @@ class CriarTabelaTelefones extends Migration
      */
     public function up()
     {
-        Schema::create('tb_telefones', function (Blueprint $table) {
+        Schema::create('telefones', function (Blueprint $table) {
             $table->increments('id');
             $table->string('numero', 20);
-            $table->integer('id_cliente')->unsigned();
-            $table->foreign('id_cliente')
+            $table->integer('cliente_id')->unsigned();
+            $table->foreign('cliente_id')
                 ->references('id')
-                ->on('tb_clientes')
+                ->on('clientes')
                 ->onDelete('cascade');
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ class CriarTabelaTelefones extends Migration
      */
     public function down()
     {
-        Schema::drop('tb_telefones');
+        Schema::drop('telefones');
     }
 }

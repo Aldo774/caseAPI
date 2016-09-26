@@ -12,7 +12,7 @@ class CriarTabelaUsuarios extends Migration
      */
     public function up()
     {
-        Schema::create('tb_usuarios', function (Blueprint $table) {
+        Schema::create('usuarios', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome', 100);
             $table->string('nivel', 20);
@@ -30,6 +30,6 @@ class CriarTabelaUsuarios extends Migration
      */
     public function down()
     {
-        Schema::drop('tb_usuarios');
+        Schema::drop('usuarios');
     }
 }

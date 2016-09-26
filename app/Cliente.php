@@ -12,11 +12,11 @@ class Cliente extends Model
 
     public function tel()
     {
-        return $this->hasMany('App\Telefone');
+        return $this->hasMany('App\Telefone', 'cliente_id')->select(['cliente_id','numero']);
     }
 
     public function vendas()
     {
-    	return $this->belongsTo('App\Venda');
+    	return $this->hasMany('App\Venda', 'cliente_id')->select(['cliente_id','situacao', 'valorvenda']);
     }
 }

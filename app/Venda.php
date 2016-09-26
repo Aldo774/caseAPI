@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Venda extends Model
 {
 
-    protected $fillable = ['id_cliente', 'id_prodserv', 'situacao'];
+    protected $fillable = ['cliente_id', 'proserv_id', 'situacao', 'valorvenda', 'valorcusto'];
 
     protected $dates = ['deleted_at'];
 

@@ -12,7 +12,7 @@ class CriarTabelaProdutoservico extends Migration
      */
     public function up()
     {
-        Schema::create('tb_produtoservico', function (Blueprint $table) {
+        Schema::create('produto_servicos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome', 100);
             $table->string('custo', 10);
@@ -29,6 +29,6 @@ class CriarTabelaProdutoservico extends Migration
      */
     public function down()
     {
-        Schema::drop('tb_produtoservico');
+        Schema::drop('produtoservico');
     }
 }

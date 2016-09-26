@@ -12,20 +12,20 @@ class CriarTabelaVendas extends Migration
      */
     public function up()
     {
-        Schema::create('tb_vendas', function (Blueprint $table) {
+        Schema::create('vendas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('situacao', 20);
             $table->string('valorcusto', 10);
             $table->string('valorvenda', 10);
-            $table->integer('id_cliente')->unsigned();
-            $table->foreign('id_cliente')
+            $table->integer('cliente_id')->unsigned();
+            $table->foreign('cliente_id')
                 ->references('id')
-                ->on('tb_clientes')
+                ->on('clientes')
                 ->onDelete('cascade');
-            $table->integer('id_proserv')->unsigned();
-            $table->foreign('id_proserv')
+            $table->integer('proserv_id')->unsigned();
+            $table->foreign('proserv_id')
                 ->references('id')
-                ->on('tb_produtoservico')
+                ->on('produtoservico')
                 ->onDelete('no action');
             $table->timestamps();
         });
@@ -38,6 +38,6 @@ class CriarTabelaVendas extends Migration
      */
     public function down()
     {
-        Schema::drop('tb_vendas');
+        Schema::drop('vendas');
     }
 }

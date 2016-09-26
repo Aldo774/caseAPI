@@ -12,7 +12,7 @@ class CriarTabelaDespesa extends Migration
      */
     public function up()
     {
-        Schema::create('tb_despesas', function (Blueprint $table) {
+        Schema::create('despesas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome', 100);
             $table->string('valor', 60);
@@ -29,6 +29,6 @@ class CriarTabelaDespesa extends Migration
      */
     public function down()
     {
-        Schema::drop('tb_despesas');
+        Schema::drop('despesas');
     }
 }

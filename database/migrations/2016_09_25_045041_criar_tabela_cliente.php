@@ -12,7 +12,7 @@ class CriarTabelaCliente extends Migration
      */
     public function up()
     {
-        Schema::create('tb_clientes', function (Blueprint $table) {
+        Schema::create('clientes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome', 100);
             $table->timestamps();
@@ -27,6 +27,6 @@ class CriarTabelaCliente extends Migration
      */
     public function down()
     {
-        Schema::drop('tb_clientes');
+        Schema::drop('clientes');
     }
 }

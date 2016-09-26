@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Telefone extends Model
 {
-    protected $fillable = ['numero', 'id_cliente'];
+    protected $fillable = ['numero', 'cliente_id'];
 
     protected $dates = ['deleted_at'];
 
