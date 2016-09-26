@@ -8,12 +8,26 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Hash;
 use JWTAuth;
+use Validator;
+use App\Http\Requests\AuthenticateRequest;
 
 class AuthController extends Controller
 {
-    public function authenticate(Request $request) {
+    public function authenticate(AuthenticateRequest $request) {
      
       $credentials = $request->only('nome', 'senha');
+
+      $validator = Validator::make($credentials, [
+          'senha' => 'required',
+          'nome' => 'required'
+      ]);
+
+      if($validator->fails()) {
+          return response()->json([
+              'message'   => 'Credenciais Invalidas',
+              'errors'        => $validator->errors()->all()
+          ], 422);
+      }
 
       $usuario = Usuario::where('nome', $credentials['nome'])->first();
 

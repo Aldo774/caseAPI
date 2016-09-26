@@ -17,7 +17,23 @@ class UsuariosController extends Controller
     public function index()
     {
         $usuarios = Usuario::all();
+
+        if(\Auth::user()->nivel != 'Admin') {
+            return response()->json([
+                'message'   => 'Você não tem permissão para visualizar usuarios',
+            ], 401);
+        }
+
         return response()->json($usuarios);
+    }
+
+    protected function usuarioValidator($request) {
+        $validator = Validator::make($request->all(), [
+            'nome' => 'required|max:100',
+            'email' => 'required|email|unique:usuarios'
+        ]);
+
+        return $validator;
     }
 
     public function show($id)
@@ -30,13 +46,34 @@ class UsuariosController extends Controller
             ], 404);
         }
 
+        if((\Auth::user()->id != $usuario->id) && (\Auth::user()->nivel != 'Admin')) {
+            return response()->json([
+                'message'   => 'Você não tem permissão para visualizar esse usuário',
+            ], 401);
+        }
+
         return response()->json($usuario);
     }
 
     public function store(Request $request)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+            'email' => 'required|email|unique:usuarios',
+            'senha' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $usuario = new Usuario();
-        $usuario->fill($request->all());
+        $usuario->fill($data);
         $usuario->hash = Hash::make($usuario->id);
         $usuario->save();
 
@@ -46,11 +83,34 @@ class UsuariosController extends Controller
     public function update(Request $request, $id)
     {
         $usuario = Usuario::find($id);
+        $data = $request->all();
 
         if(!$usuario) {
             return response()->json([
                 'message'   => 'Usuario não encontrado',
             ], 404);
+        }
+
+        if(array_key_exists('email', $data) && $usuario->email == $data['email']) {
+            unset($data['email']);
+        }
+
+        $validator = Validator::make($data, [
+            'nome' => 'max:100',
+            'email' => 'email|unique:usuarios',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
+        if((\Auth::user()->id != $usuario->id) && (\Auth::user()->nivel != 'Admin')) {
+            return response()->json([
+                'message'   => 'Você não tem permissão para visualizar esse usuário',
+            ], 401);
         }
 
         $usuario->fill($request->all());
@@ -67,6 +127,12 @@ class UsuariosController extends Controller
             return response()->json([
                 'message'   => 'Usuario não encontrado',
             ], 404);
+        }
+
+        if((\Auth::user()->id != $usuario->id) && (\Auth::user()->nivel != 'Admin')) {
+            return response()->json([
+                'message'   => 'Você não tem permissão para visualizar esse usuário',
+            ], 401);
         }
 
         $usuario->delete();
