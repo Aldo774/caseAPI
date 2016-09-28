@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Cliente;
+use Validator;
 
 class ClientesController extends Controller
 {
@@ -35,8 +36,21 @@ class ClientesController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $cliente = new Cliente();
-        $cliente->fill($request->all());
+        $cliente->fill($data);
         $cliente->save();
 
         return response()->json($cliente, 201);
@@ -44,6 +58,20 @@ class ClientesController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $cliente = Cliente::find($id);
 
         if(!$cliente) {
@@ -52,7 +80,7 @@ class ClientesController extends Controller
             ], 404);
         }
 
-        $cliente->fill($request->all());
+        $cliente->fill($data);
         $cliente->save();
 
         return response()->json($cliente);
