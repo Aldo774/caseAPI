@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\ProdutoServico;
+use Validator;
 
 class ProdServController extends Controller
 {
@@ -35,8 +36,23 @@ class ProdServController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+            'custo' => 'required|max:10',
+            'tipo' => 'required|max:10'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $prodserv = new ProdutoServico();
-        $prodserv->fill($request->all());
+        $prodserv->fill($data);
         $prodserv->save();
 
         return response()->json($prodserv, 201);
@@ -44,6 +60,21 @@ class ProdServController extends Controller
 
     public function update(Request $request, $id)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+            'custo' => 'required|max:10',
+            'tipo' => 'required|max:10'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $prodserv = ProdutoServico::find($id);
 
         if(!$prodserv) {
@@ -52,7 +83,7 @@ class ProdServController extends Controller
             ], 404);
         }
 
-        $prodserv->fill($request->all());
+        $prodserv->fill($data);
         $prodserv->save();
 
         return response()->json($prodserv);
