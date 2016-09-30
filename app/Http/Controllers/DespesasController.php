@@ -35,8 +35,23 @@ class DespesasController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+            'valor' => 'required|max:60',
+            'situacao' => 'required|max:20'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $despesa = new Despesa();
-        $despesa->fill($request->all());
+        $despesa->fill($data);
         $despesa->save();
 
         return response()->json($despesa, 201);
@@ -44,6 +59,21 @@ class DespesasController extends Controller
 
     public function update(Request $request, $id)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'nome' => 'required|max:100',
+            'valor' => 'required|max:60',
+            'situacao' => 'required|max:20'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $despesa = Despesa::find($id);
 
         if(!$despesa) {
@@ -52,7 +82,7 @@ class DespesasController extends Controller
             ], 404);
         }
 
-        $despesa->fill($request->all());
+        $despesa->fill($data);
         $despesa->save();
 
         return response()->json($despesa);
