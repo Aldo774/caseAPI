@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Telefone;
+use Validator;
 
 class TelefonesController extends Controller
 {
@@ -35,8 +36,22 @@ class TelefonesController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'numero' => 'required|max:20',
+            'cliente_id' => 'required|exists:clientes,id'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $telefone = new Telefone();
-        $telefone->fill($request->all());
+        $telefone->fill($data);
         $telefone->save();
 
         return response()->json($telefone, 201);
@@ -44,6 +59,7 @@ class TelefonesController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $telefone = Telefone::find($id);
 
         if(!$telefone) {
@@ -52,7 +68,21 @@ class TelefonesController extends Controller
             ], 404);
         }
 
-        $telefone->fill($request->all());
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'numero' => 'required|max:20',
+            'cliente_id' => 'required|exists:clientes,id'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
+        $telefone->fill($data);
         $telefone->save();
 
         return response()->json($telefone);
