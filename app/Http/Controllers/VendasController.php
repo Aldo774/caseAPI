@@ -35,8 +35,25 @@ class VendasController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'situacao' => 'required|max:20',
+            'valorcusto' => 'required|max:10',
+            'valorvenda' => 'required|max:10',
+            'cliente_id' => 'required|exists:clientes,id',
+            'proserv_id' => 'required|exists:produto_servicos,id'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
         $venda = new Venda();
-        $venda->fill($request->all());
+        $venda->fill($data);
         $venda->save();
 
         return response()->json($venda, 201);
@@ -52,7 +69,24 @@ class VendasController extends Controller
             ], 404);
         }
 
-        $venda->fill($request->all());
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'situacao' => 'required|max:20',
+            'valorcusto' => 'required|max:10',
+            'valorvenda' => 'required|max:10',
+            'cliente_id' => 'required|exists:clientes,id',
+            'proserv_id' => 'required|exists:produto_servicos,id'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'message'   => 'Falha ao Validar',
+                'errors'    => $validator->errors()->all()
+            ], 422);
+        }
+
+        $venda->fill($data);
         $venda->save();
 
         return response()->json($venda);
