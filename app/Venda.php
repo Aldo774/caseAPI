@@ -11,8 +11,10 @@ class Venda extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $hidden = ['cliente_id'];
+
     function cliente() {
-        return $this->belongsTo('App\Cliente');
+        return $this->belongsTo('App\Cliente')->select(['id','nome']);
     }
 
     function prodserv() {

@@ -16,13 +16,14 @@ class VendasController extends Controller
 
     public function index()
     {
-        $vendas = Venda::all();
+        $vendas = Venda::with('cliente')->get();
+        //$vendas = Venda::all();
         return response()->json($vendas);
     }
 
     public function show($id)
     {
-        $venda = Venda::find($id);
+        $venda = Venda::with('cliente')->find($id);
 
         if(!$venda) {
             return response()->json([
